@@ -25,7 +25,7 @@ export function healthScore(r:Result,t:Twin):number{
   const buf=30*Math.min(Math.max(low/(2*b),0),1)
   const bills=r.unpayable?0:25
   const goal=res>0?25*Math.max(0,1-Math.max(0,-low)/res):25
-  const pace=t.plannedDailySpend>0?20*Math.min(r.allowance/t.plannedDailySpend,1):20
+  const pace=low<0?0:t.plannedDailySpend>0?20*Math.min(r.allowance/t.plannedDailySpend,1):20
   return Math.round(buf+bills+goal+pace)
 }
 export function simulate(twin:Twin,decisions:Decision[],shocks:Event[]=[]):Result{

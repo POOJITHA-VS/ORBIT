@@ -13,3 +13,7 @@ describe('ORBIT engine',()=>{
  it('7 day-18 shock leaves earlier days alone',()=>{const a=simulate(seed(),[],[]),b=simulate(seed(),[],[{id:'s',day:18,amount:500,kind:'shock',label:'x'}])
   a.days.forEach((d,i)=>{if(d.day<18)expect(b.days[i].freeCash).toBe(d.freeCash)})})
 })
+describe('health score (spec samples)',()=>{
+ it('A+Exam is about 44 and Skip+Exam about 93',()=>{const r=stressTest(seed(),D,exam);expect(r[0].health).toBe(44);expect(r[2].health).toBe(93)})
+ it('bill-day purchase applies both events in order',()=>{const r=simulate(seed(),[{kind:'buy',amount:100,day:12}],[]);expect(r.days.find(x=>x.day===12)!.events.length).toBe(3)})
+})

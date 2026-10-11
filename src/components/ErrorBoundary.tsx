@@ -1,36 +1,8 @@
-import {Component, type ErrorInfo, type ReactNode} from 'react'
-
-type State = {failed: boolean}
-
-/** Last line of defence: a render crash shows a recovery screen instead of a blank page. */
-export default class ErrorBoundary extends Component<{children: ReactNode}, State> {
-  state: State = {failed: false}
-  static getDerivedStateFromError(): State {
-    return {failed: true}
-  }
-  componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('ORBIT render error', error, info.componentStack)
-  }
-  render() {
-    if (!this.state.failed) return this.props.children
-    return (
-      <main className="crash" role="alert">
-        <h1>Something broke in orbit</h1>
-        <p>Your data is saved on this device. Reload to continue, or reset the demo if the problem comes back.</p>
-        <button className="btn btn-primary" onClick={() => window.location.reload()}>
-          Reload ORBIT
-        </button>
-        <button
-          className="btn btn-ghost"
-          onClick={() => {
-            localStorage.removeItem('orbit-ledger2')
-            localStorage.removeItem('orbit-sandbox2')
-            window.location.reload()
-          }}
-        >
-          Reset saved data
-        </button>
-      </main>
-    )
-  }
-}
+import {Component,type ReactNode} from 'react'
+export default class ErrorBoundary extends Component<{children:ReactNode},{failed:boolean}>{
+ state={failed:false}
+ static getDerivedStateFromError(){return{failed:true}}
+ reset=()=>{try{localStorage.removeItem('orbit-ledger2');localStorage.removeItem('orbit-sandbox2')}catch{/* storage unavailable */}location.reload()}
+ render(){return this.state.failed
+  ?<div role="alert" className="p-6 text-white"><h1 className="text-xl font-bold">Something went wrong.</h1><p>Your saved data may be corrupted.</p><button className="mt-3 px-3 py-2 rounded bg-indigo-600" onClick={this.reset}>Reset and reload</button></div>
+  :this.props.children}}
